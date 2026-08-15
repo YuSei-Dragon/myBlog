@@ -6,10 +6,9 @@
       "vite/client"
     ],
     "allowArbitraryExtensions": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": [
-        "src/*"
+        "./src/*"
       ]
     },
     /* Linting */
