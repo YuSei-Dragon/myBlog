@@ -1,25 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { Search } from '@element-plus/icons-vue'
 import RainEffect from '@/components/RainEffect.vue'
 import SvgIcon from '@/components/SvgIcon.vue'
 import pageRouter, { type Page } from '@/data/pageRouter'
 
 const input = ref('')
-const functionButtons = ref([
-  {
-    text: 'cs2沙二小众变态道具',
-    icon: 'folder'
-  },
-  {
-    text: '未发布',
-    icon: 'settings'
-  },
-  {
-    text: '未发布',
-    icon: 'settings'
-  }
-])//快捷图标区
+const functionButtons = pageRouter.getButtons()
 const pageList = ref<Page[]>([])
 const handleSearch = () => {
   if(input.value === '') {
@@ -63,6 +49,10 @@ const handleWheel = (event: WheelEvent) => {
   }
   reflashPageList()
 }
+// 点击快捷图标
+const handleClick = (text: string) => {
+  pageRouter.handleClick(text)
+}
 </script>
 
 <template>
@@ -92,7 +82,8 @@ const handleWheel = (event: WheelEvent) => {
         </div>
       </div>
       <div class="home-function-right">
-        <div class="home-function-item" v-for="item in functionButtons" :key="item.text">
+        <div class="home-function-item" v-for="item in functionButtons" :key="item.text"
+          @click="handleClick(item.text)">
           <div class="home-function-item-text">
             {{ item.text }}
           </div>

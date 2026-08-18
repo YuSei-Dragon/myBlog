@@ -7,61 +7,86 @@ const pageMes = [
 	{
 		name: "沙二小众变态道具",
 		label: "沙二小众变态道具",
-		path: "@/views/Dust2.vue",
+		path: "/Dust2",
 	},
 	{
 		name: "测试1",
 		label: "未公开1",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试2",
 		label: "未公开2",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试1",
 		label: "未公开3",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试2",
 		label: "未公开4",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试1",
 		label: "未公开5",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试2",
 		label: "未公开6",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试1",
 		label: "未公开7",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试2",
 		label: "未公开8",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试1",
 		label: "未公开9",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 	{
 		name: "测试2",
 		label: "未公开10",
-		path: "@/views/Unknow.vue",
+		path: "/Unknow",
 	},
 ]
+const buttons = [
+	{
+		text: "沙二小众变态道具",
+		icon: "folder",
+	},
+	{
+		text: "未发布",
+		icon: "settings",
+	},
+	{
+		text: "未发布",
+		icon: "settings",
+	},
+] //快捷图标区
 export default {
 	getAllMesPage() {
 		return pageMes
+	},
+	// 点击快捷图标
+	handleClick(text: string) {
+		const page = pageMes.find((item) => item.name === text)
+		if (page) {
+			const router = useRouter()
+			router.push(page.path)
+		}
+	},
+	getButtons() {
+		return buttons
 	},
 }

@@ -1,8 +1,12 @@
 <script setup lang="ts">
 // Your script here
 </script>
-<template lang="pug">
-.div
+<template >
+    <BackgroundImg >
+        <slot>
+            
+        </slot>
+    </BackgroundImg>
 </template>
 
 
