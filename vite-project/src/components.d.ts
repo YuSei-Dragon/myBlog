@@ -12,11 +12,10 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     BackgroundImg: typeof import('./components/BackgroundImg.vue')['default']
-    Dust2: typeof import('./components/Dust2.vue')['default']
+    MapViewer: typeof import('./components/MapViewer.vue')['default']
     RainEffect: typeof import('./components/RainEffect.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SvgIcon: typeof import('./components/SvgIcon.vue')['default']
-    Unknow: typeof import('./components/Unknow.vue')['default']
   }
 }

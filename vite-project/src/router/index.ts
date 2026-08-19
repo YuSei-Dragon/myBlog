@@ -7,6 +7,16 @@ const routes: Array<RouteRecordRaw> = [
 		name: "Home",
 		component: Home,
 	},
+	{
+		path: "/Dust2",
+		name: "Dust2",
+		component: () => import("../views/Dust2.vue"),
+	},
+	{
+		path: "/:pathMatch(.*)*",
+		name: "Unknow",
+		component: () => import("../views/Unknow.vue"),
+	},
 ]
 
 const router = createRouter({

@@ -202,6 +202,81 @@ const props = withDefaults(defineProps<Props>(), {
       />
     </template>
     
+    <!-- 箭头下图标 -->
+    <template v-else-if="name === 'arrow-down'">
+      <path 
+        d="M12 5V19M12 19L5 12M12 19L19 12" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
+    
+    <!-- 箭头上图标 -->
+    <template v-else-if="name === 'arrow-up'">
+      <path 
+        d="M12 19V5M12 5L5 12M12 5L19 12" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
+    
+    <!-- 三角形下图标（书名号样式） -->
+    <template v-else-if="name === 'triangle-down'">
+      <path 
+        d="M6 9L12 15L18 9" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
+    
+    <!-- 三角形上图标（书名号样式） -->
+    <template v-else-if="name === 'triangle-up'">
+      <path 
+        d="M6 15L12 9L18 15" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
+    
+    <!-- 三角形左图标（书名号样式） -->
+    <template v-else-if="name === 'triangle-left'">
+      <path 
+        d="M15 6L9 12L15 18" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
+    
+    <!-- 三角形右图标（书名号样式） -->
+    <template v-else-if="name === 'triangle-right'">
+      <path 
+        d="M9 6L15 12L9 18" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
+    <!-- 三条杠图标（更多选项） -->
+    <template v-else-if="name === 'menu'">
+      <path 
+        d="M3 6H21M3 12H21M3 18H21" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
     <!-- 默认图标（问号） -->
     <template v-else>
       <circle cx="12" cy="12" r="10" :stroke="color" stroke-width="2"/>

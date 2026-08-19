@@ -81,10 +81,7 @@ export default {
 	// 点击快捷图标
 	handleClick(text: string) {
 		const page = pageMes.find((item) => item.name === text)
-		if (page) {
-			const router = useRouter()
-			router.push(page.path)
-		}
+		return page ? page.path : null // 返回路径字符串
 	},
 	getButtons() {
 		return buttons
