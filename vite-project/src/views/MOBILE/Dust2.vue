@@ -43,6 +43,7 @@ const displayMap = computed<CS2Map>(() => {
   const maxY = Math.min(1000, b.maxY + pad)
   return {
     ...dust2Map,
+    radarImage: undefined,   // ← 新增：第二阶段隐藏雷达图，避免低分辨率放大模糊
     viewBox: `${minX} ${minY} ${maxX - minX} ${maxY - minY}`,
   }
 })

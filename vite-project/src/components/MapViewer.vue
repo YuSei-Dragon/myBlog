@@ -27,6 +27,10 @@ const selectedRegion = computed(() =>
   currentMap.value?.regions.find(r => r.id === selectedRegionId.value) || null
 )
 
+const regionBaseOpacity = computed(() =>
+  currentMap.value.regionOpacity ?? (currentMap.value.radarImage ? 0.3 : 0.45)
+)
+
 const getRegionColor = (region: MapRegion) =>
   region.color || regionTypeColors[region.type || 'default']
 
@@ -47,6 +51,7 @@ const handleMouseMove = (e: MouseEvent) => {
   mouseX.value = e.clientX - rect.left
   mouseY.value = e.clientY - rect.top
 }
+
 </script>
 
 <template>
@@ -62,7 +67,16 @@ const handleMouseMove = (e: MouseEvent) => {
         class="map-svg"
         preserveAspectRatio="xMidYMid meet"
       >
-        <defs>
+        <!-- 雷达图背景 -->
+        <image 
+          v-if="currentMap.radarImage"
+          :href="currentMap.radarImage"
+          width="100%" 
+          height="100%"
+          preserveAspectRatio="xMidYMid meet"
+          class="radar-bg"
+        />
+        <defs v-if="!currentMap.radarImage">
           <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
             <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
           </pattern>
@@ -81,7 +95,12 @@ const handleMouseMove = (e: MouseEvent) => {
               hovered: hoveredRegionId === region.id,
               selected: selectedRegionId === region.id,
             }"
-            :style="{ fill: getRegionColor(region) }"
+            :style="{ 
+              fill: getRegionColor(region),
+              fillOpacity: hoveredRegionId === region.id || selectedRegionId === region.id 
+                ? 1 
+                : regionBaseOpacity 
+            }"
             @mouseenter="handleRegionHover(region)"
             @click="handleRegionClick(region)"
           />
@@ -172,7 +191,10 @@ const handleMouseMove = (e: MouseEvent) => {
     display: block;
   }
 }
-
+/* 雷达图背景 */
+.radar-bg {
+  opacity: 1;
+}
 /* 区域 */
 .region {
   stroke: rgba(255, 255, 255, 0.25);
