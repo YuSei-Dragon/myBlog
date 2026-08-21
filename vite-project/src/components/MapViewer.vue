@@ -106,6 +106,19 @@ const handleMouseMove = (e: MouseEvent) => {
           />
         </g>
 
+        <!-- 常态显示的标签（showLabel=true 的区域，始终可见） -->
+        <g class="always-visible-labels">
+          <text
+            v-for="region in currentMap.regions.filter(r => r.showLabel && r.center)"
+            :key="'label-' + region.id"
+            :x="region.center!.x"
+            :y="region.center!.y"
+            class="region-label always-label"
+            text-anchor="middle"
+            dominant-baseline="middle"
+          >{{ region.name }}</text>
+        </g>
+
         <!-- 悬停区域名称（SVG内标签） -->
         <text
           v-if="hoveredRegion && hoveredRegion.center && hoveredRegionId !== selectedRegionId"
@@ -373,5 +386,16 @@ const handleMouseMove = (e: MouseEvent) => {
     .info-name { font-size: 0.95rem; }
     .info-type, .info-desc { font-size: 0.78rem; }
   }
+}
+/* 常态标签 */
+.always-label {
+  fill: #fff;
+  font-size: 30px;
+  font-weight: 600;
+  pointer-events: none;
+  text-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.8),
+    0 0 12px rgba(0, 0, 0, 0.5);
+  opacity: 0.85;
 }
 </style>
