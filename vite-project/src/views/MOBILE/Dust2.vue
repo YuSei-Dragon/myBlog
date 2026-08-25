@@ -1,6 +1,7 @@
 <!-- c:\work\vue3-test\myBlog\vite-project\src\views\MOBILE\Dust2.vue -->
 <script setup lang="ts">
 import MapViewer from '@/components/MapViewer.vue'
+import UtilitySelect from '@/components/UtilitySelect.vue'
 import { cs2Maps, type CS2Map, type MapRegion } from '@/data/cs2Maps'
 
 const router = useRouter()
@@ -22,13 +23,15 @@ const getRegionBBox = (region: MapRegion) => {
 }
 
 const zoomedRegion = ref<MapRegion | null>(null)
+const selectedRegionId = ref<string | null>(null)
+const showUtilityModal = ref(false)
 
 const phase = computed<'select-region' | 'select-item'>(() =>
   zoomedRegion.value ? 'select-item' : 'select-region'
 )
 
 const phaseText = computed(() => {
-  if (phase.value === 'select-region') return '请选择一个区域'
+  if (phase.value === 'select-region') return '请选择 道具最终落点 区域'
   return `已进入「${zoomedRegion.value?.name}」· 请选择想查看的道具`
 })
 
@@ -43,19 +46,39 @@ const displayMap = computed<CS2Map>(() => {
   const maxY = Math.min(1000, b.maxY + pad)
   return {
     ...dust2Map,
-    radarImage: undefined,   // ← 新增：第二阶段隐藏雷达图，避免低分辨率放大模糊
+    radarImage: undefined,   // ← 第二阶段隐藏雷达图，避免低分辨率放大模糊
     viewBox: `${minX} ${minY} ${maxX - minX} ${maxY - minY}`,
   }
 })
 
+// 整合：点击区域同时触发放大 + 高亮 + 显示信息
 const handleRegionClick = (region: MapRegion) => {
   if (phase.value === 'select-region') {
     zoomedRegion.value = region
+    selectedRegionId.value = region.id
   }
+}
+
+// 信息卡关闭按钮：仅清空选中（保持放大状态）
+const handleClearSelection = () => {
+  selectedRegionId.value = null
+}
+
+// 选择道具：若区域详情卡还在则先关掉，再弹出道具选择弹窗
+const openUtilityModal = () => {
+  if (selectedRegionId.value) {
+    selectedRegionId.value = null
+  }
+  showUtilityModal.value = true
+}
+const closeUtilityModal = () => {
+  showUtilityModal.value = false
 }
 
 const reset = () => {
   zoomedRegion.value = null
+  selectedRegionId.value = null
+  showUtilityModal.value = false
 }
 </script>
 
@@ -74,7 +97,13 @@ const reset = () => {
 
     <!-- 地图主体（阶段切换时重新挂载，触发刷新动画） -->
     <div class="dust2-map-wrap">
-      <MapViewer :key="phase" :map="displayMap" @region-click="handleRegionClick" />
+      <MapViewer 
+        :key="phase" 
+        :map="displayMap" 
+        :selected-region-id="selectedRegionId"
+        @region-click="handleRegionClick"
+        @clear-selection="handleClearSelection"
+      />
     </div>
 
     <!-- 底部动态状态引导条 -->
@@ -87,11 +116,43 @@ const reset = () => {
         />
       </div>
       <div class="status-text">{{ phaseText }}</div>
-      <div class="status-reset" v-if="phase === 'select-item'" @click="reset">
-        <SvgIcon name="arrow-left" color="rgba(255,255,255,0.85)" :size="14" />
-        <span>返回全图</span>
+      <div class="status-buttons-block" v-if="phase === 'select-item'">
+        <div class="status-reset"  @click="reset">
+          <SvgIcon name="arrow-left" color="rgba(255,255,255,0.85)" :size="14" />
+          <span>返回全图</span>
+        </div>
+        <div style="height: 10px;"></div>
+        <div class="status-reset"  @click="openUtilityModal">
+          <SvgIcon name="view-detail" color="rgba(255,255,255,0.85)" :size="14" />
+          <span>选择道具</span>
+        </div>
       </div>
     </div>
+
+    <!-- 道具选择弹窗 -->
+    <transition name="modal-fade">
+      <div class="utility-modal-mask" v-if="showUtilityModal" @click.self="closeUtilityModal">
+        <div class="utility-modal">
+          <div class="utility-modal-header">
+            <div class="utility-modal-title">
+              <span class="title-region">{{ zoomedRegion?.name }}</span>
+              <span class="title-sep">·</span>
+              <span class="title-text">道具列表</span>
+            </div>
+            <div class="utility-modal-close" @click="closeUtilityModal">
+              <SvgIcon name="close" color="#fff" :size="18" />
+            </div>
+          </div>
+          <div class="utility-modal-body">
+            <!-- UtilitySelect 组件内容待实现，先传入地图与区域用于后续过滤道具 -->
+            <UtilitySelect
+              :map-id="dust2Map.id"
+              :region-id="zoomedRegion?.id || ''"
+            />
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -221,6 +282,91 @@ const reset = () => {
     background: rgba(52, 152, 219, 0.15);
     border-color: rgba(52, 152, 219, 0.4);
     .status-icon { background: rgba(52, 152, 219, 0.3); }
+  }
+}
+
+/* 道具选择弹窗 */
+.utility-modal-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.utility-modal {
+  width: 100%;
+  max-width: 560px;
+  max-height: 78vh;
+  display: flex;
+  flex-direction: column;
+  background: rgba(20, 22, 30, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+
+  .utility-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+
+    .utility-modal-title {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+
+      .title-region { color: #fff; }
+      .title-sep { color: rgba(255, 255, 255, 0.4); }
+      .title-text { color: rgba(255, 255, 255, 0.7); font-weight: 400; }
+    }
+    .utility-modal-close {
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      &:active { background: rgba(255, 255, 255, 0.12); }
+    }
+  }
+
+  .utility-modal-body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 12px 16px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* 弹窗过渡 */
+.modal-fade-enter-active, .modal-fade-leave-active {
+  transition: opacity 0.25s ease;
+  .utility-modal {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+.modal-fade-enter-from, .modal-fade-leave-to {
+  opacity: 0;
+  .utility-modal {
+    transform: translateY(100%);
   }
 }
 </style>

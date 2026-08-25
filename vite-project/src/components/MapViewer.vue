@@ -5,6 +5,7 @@ import { type CS2Map, type MapRegion, regionTypeColors, regionTypeLabels } from 
 
 interface Props {
   map: CS2Map                // 当前要渲染的地图数据
+  selectedRegionId?: string | null // 受控选中区域ID，由父级管理，跨重新挂载保留高亮
 }
 
 const props = defineProps<Props>()
@@ -12,10 +13,10 @@ const props = defineProps<Props>()
 const emit = defineEmits<{
   'region-click': [region: MapRegion]
   'region-hover': [region: MapRegion | null]
+  'clear-selection': [] // 点击信息卡关闭按钮时通知父级清空选中
 }>()
 
 const hoveredRegionId = ref<string | null>(null)
-const selectedRegionId = ref<string | null>(null)
 const mouseX = ref(0)
 const mouseY = ref(0)
 
@@ -24,7 +25,7 @@ const hoveredRegion = computed(() =>
   currentMap.value?.regions.find(r => r.id === hoveredRegionId.value) || null
 )
 const selectedRegion = computed(() =>
-  currentMap.value?.regions.find(r => r.id === selectedRegionId.value) || null
+  currentMap.value?.regions.find(r => r.id === props.selectedRegionId) || null
 )
 
 const regionBaseOpacity = computed(() =>
@@ -43,8 +44,10 @@ const handleRegionLeave = () => {
   emit('region-hover', null)
 }
 const handleRegionClick = (region: MapRegion) => {
-  selectedRegionId.value = region.id
   emit('region-click', region)
+}
+const handleClearSelection = () => {
+  emit('clear-selection')
 }
 const handleMouseMove = (e: MouseEvent) => {
   const rect = (e.currentTarget as HTMLElement).getBoundingClientRect()
@@ -128,16 +131,6 @@ const handleMouseMove = (e: MouseEvent) => {
           text-anchor="middle"
           dominant-baseline="middle"
         >{{ hoveredRegion.name }}</text>
-
-        <!-- 选中区域名称（SVG内标签） -->
-        <text
-          v-if="selectedRegion && selectedRegion.center"
-          :x="selectedRegion.center.x"
-          :y="selectedRegion.center.y"
-          class="region-label selected-label"
-          text-anchor="middle"
-          dominant-baseline="middle"
-        >{{ selectedRegion.name }}</text>
       </svg>
 
       <!-- 跟随鼠标的提示框 -->
@@ -164,7 +157,7 @@ const handleMouseMove = (e: MouseEvent) => {
             :style="{ background: getRegionColor(selectedRegion) }"
           ></span>
           <span class="info-name">{{ selectedRegion.name }}</span>
-          <div class="info-close" @click="selectedRegionId = null">
+          <div class="info-close" @click="handleClearSelection">
             <SvgIcon name="close" color="#fff" :size="18" />
           </div>
         </div>
@@ -242,9 +235,6 @@ const handleMouseMove = (e: MouseEvent) => {
   &.hover-label {
     opacity: 0.85;
     font-size: 24px;
-  }
-  &.selected-label {
-    animation: label-pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 }
 
@@ -334,12 +324,6 @@ const handleMouseMove = (e: MouseEvent) => {
 @keyframes region-pulse {
   0%, 100% { filter: brightness(1.5) saturate(1.2) drop-shadow(0 0 6px rgba(255,255,255,0.4)); }
   50% { filter: brightness(1.7) saturate(1.3) drop-shadow(0 0 16px rgba(255,255,255,0.7)); }
-}
-
-/* 标签弹出动画 */
-@keyframes label-pop {
-  0% { opacity: 0; transform: scale(0.6); transform-origin: center; }
-  100% { opacity: 1; transform: scale(1); }
 }
 
 /* 提示框过渡 */

@@ -1,3 +1,4 @@
+<!-- c:\work\vue3-test\myBlog\vite-project\src\components\SvgIcon.vue -->
 <script setup lang="ts">
 /**
  * 通用SVG图标组件
@@ -267,6 +268,7 @@ const props = withDefaults(defineProps<Props>(), {
         stroke-linejoin="round"
       />
     </template>
+    
     <!-- 三条杠图标（更多选项） -->
     <template v-else-if="name === 'menu'">
       <path 
@@ -277,6 +279,192 @@ const props = withDefaults(defineProps<Props>(), {
         stroke-linejoin="round"
       />
     </template>
+    
+    <!-- 查看详情图标（放大镜+文档） -->
+    <template v-else-if="name === 'view-detail'">
+      <!-- 文档主体 -->
+      <path 
+        d="M14 3H6C5.46957 3 4.96086 3.21071 4.58579 3.58579C4.21071 3.96086 4 4.46957 4 5V19C4 19.5304 4.21071 20.0391 4.58579 20.4142C4.96086 20.7893 5.46957 21 6 21H12" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+      <!-- 文档内容线 -->
+      <path 
+        d="M8 8H11M8 12H11" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+      <!-- 放大镜镜片 -->
+      <circle cx="17.5" cy="15.5" r="3.5" :stroke="color" stroke-width="2"/>
+      <!-- 放大镜手柄 -->
+      <path 
+        d="M20 18L22 20" 
+        :stroke="color"
+        stroke-width="2" 
+        stroke-linecap="round" 
+        stroke-linejoin="round"
+      />
+    </template>
+    
+    <!-- 烟雾弹图标（弹体+顶部烟雾云朵） -->
+    <template v-else-if="name === 'smoke'">
+      <!-- 弹体 -->
+      <path 
+        d="M8 11H16V19C16 20.1046 15.1046 21 14 21H10C8.89543 21 8 20.1046 8 19V11Z" 
+        :fill="color"
+        fill-opacity="0.25"
+        :stroke="color"
+        stroke-width="1.8"
+        stroke-linejoin="round"
+      />
+      <!-- 弹体顶部横纹 -->
+      <path 
+        d="M8.5 14H15.5" 
+        :stroke="color"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      />
+      <!-- 烟雾云朵1（左） -->
+      <path 
+        d="M6 9C4.8954 9 4 8.1046 4 7C4 6.2 4.5 5.5 5.2 5.2C5.3 4 6.3 3 7.5 3C8.7 3 9.7 4 9.8 5.2C10.5 5.5 11 6.2 11 7C11 8.1046 10.1046 9 9 9H6Z" 
+        :fill="color"
+        fill-opacity="0.15"
+        :stroke="color"
+        stroke-width="1.6"
+        stroke-linejoin="round"
+      />
+      <!-- 烟雾云朵2（右） -->
+      <path 
+        d="M15 9C13.8954 9 13 8.1046 13 7C13 6.2 13.5 5.5 14.2 5.2C14.3 4 15.3 3 16.5 3C17.7 3 18.7 4 18.8 5.2C19.5 5.5 20 6.2 20 7C20 8.1046 19.1046 9 18 9H15Z" 
+        :fill="color"
+        fill-opacity="0.15"
+        :stroke="color"
+        stroke-width="1.6"
+        stroke-linejoin="round"
+      />
+    </template>
+    
+    <!-- 闪光弹图标（弹体+顶部放射光芒） -->
+    <template v-else-if="name === 'flash'">
+      <!-- 弹体 -->
+      <path 
+        d="M8 11H16V19C16 20.1046 15.1046 21 14 21H10C8.89543 21 8 20.1046 8 19V11Z" 
+        :fill="color"
+        fill-opacity="0.25"
+        :stroke="color"
+        stroke-width="1.8"
+        stroke-linejoin="round"
+      />
+      <!-- 弹体顶部横纹 -->
+      <path 
+        d="M8.5 14H15.5" 
+        :stroke="color"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      />
+      <!-- 中心闪光点 -->
+      <circle cx="12" cy="6" r="1.8" :fill="color"/>
+      <!-- 放射光芒（8方向） -->
+      <path 
+        d="M12 2.5V1M12 11V9.5M15.5 6H17M7 6H8.5M14.8 3.2L15.8 2.2M8.2 3.2L7.2 2.2M14.8 8.8L15.8 9.8M8.2 8.8L7.2 9.8" 
+        :stroke="color"
+        stroke-width="1.6"
+        stroke-linecap="round"
+      />
+    </template>
+    
+    <!-- 燃烧弹图标（弹体+顶部火焰） -->
+    <template v-else-if="name === 'fire'">
+      <!-- 弹体 -->
+      <path 
+        d="M8 11H16V19C16 20.1046 15.1046 21 14 21H10C8.89543 21 8 20.1046 8 19V11Z" 
+        :fill="color"
+        fill-opacity="0.25"
+        :stroke="color"
+        stroke-width="1.8"
+        stroke-linejoin="round"
+      />
+      <!-- 弹体顶部横纹 -->
+      <path 
+        d="M8.5 14H15.5" 
+        :stroke="color"
+        stroke-width="1.5"
+        stroke-linecap="round"
+      />
+      <!-- 火焰外焰 -->
+      <path 
+        d="M12 2C12 2 8.5 5 8.5 8C8.5 9.8 10 10.5 12 10.5C14 10.5 15.5 9.8 15.5 8C15.5 5 12 2 12 2Z" 
+        :fill="color"
+        fill-opacity="0.2"
+        :stroke="color"
+        stroke-width="1.6"
+        stroke-linejoin="round"
+      />
+      <!-- 火焰内焰 -->
+      <path 
+        d="M12 5C12 5 10.3 6.5 10.3 8C10.3 8.9 11 9.3 12 9.3C13 9.3 13.7 8.9 13.7 8C13.7 6.5 12 5 12 5Z" 
+        :fill="color"
+        fill-opacity="0.5"
+      />
+    </template>
+    
+    <!-- 手榴弹图标（椭圆弹体+顶部插销拉环） -->
+    <template v-else-if="name === 'grenade'">
+      <!-- 弹体（椭圆） -->
+      <ellipse 
+        cx="12" 
+        cy="15" 
+        rx="6" 
+        ry="6.5" 
+        :fill="color"
+        fill-opacity="0.25"
+        :stroke="color"
+        stroke-width="1.8"
+      />
+      <!-- 弹体分割线（CS手雷经典纹路） -->
+      <path 
+        d="M6 15H18" 
+        :stroke="color"
+        stroke-width="1.4"
+        stroke-linecap="round"
+      />
+      <path 
+        d="M12 8.5V21.5" 
+        :stroke="color"
+        stroke-width="1.4"
+        stroke-linecap="round"
+      />
+      <!-- 顶部连接座 -->
+      <path 
+        d="M10 8.5H14V7H10V8.5Z" 
+        :fill="color"
+        fill-opacity="0.4"
+        :stroke="color"
+        stroke-width="1.5"
+        stroke-linejoin="round"
+      />
+      <!-- 插销 -->
+      <path 
+        d="M12 7V4.5" 
+        :stroke="color"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+      <!-- 拉环 -->
+      <circle 
+        cx="12" 
+        cy="3.5" 
+        r="1.8" 
+        :stroke="color"
+        stroke-width="1.6"
+        fill="none"
+      />
+    </template>
+    
     <!-- 默认图标（问号） -->
     <template v-else>
       <circle cx="12" cy="12" r="10" :stroke="color" stroke-width="2"/>
